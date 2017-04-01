@@ -1,16 +1,16 @@
+
 var cache = require('memory-cache');
 
 
 
-//code will below will initialize an empty array in cache key and then retrieve it in var = arr
+
+//code below will initialize an empty array in cache key and then retrieve it in var = arr
 cache.put('users', []);
 var arr = cache.get('users');
 
 exports.createUser = function(req, res, next) {
 
-    var users =
-
-         {
+    var users = {
             firstname: "",
             lastname: "",
             email: "",
@@ -28,8 +28,8 @@ exports.createUser = function(req, res, next) {
        console.log(cache.get('user'));
        console.log('User' + " " + arr.length + " " + 'created');
    }
-
    else {
+
 
        var validateUser = false;
 
@@ -43,53 +43,47 @@ exports.createUser = function(req, res, next) {
                validateUser = true;
            }
        });
+
        if(!validateUser) {
-               arr.push(req.body);
-               //cache.put('user', arr);
+               arr.push(req.body);1
                console.log(cache.get('user'));
                console.log('User' + " " + arr.length + " " + 'created');
        }
+
    }
+
     next();
 };
 
-
-exports.showUser = function (req, res, next) {
+//This handler function shows the user on windows after user created
+exports.showUser = function (req, res) {
 
 res.send(cache.get('user'));
-next();
 
 };
-
 
 
 exports.logInUser = function (req, res) {
 
     var logInfo = {
-        LogEmail: "",
-        LogPassword: ""
+        logEmail: "",
+        logPassword: ""
     };
     var LoginCredential = req.body;
     var validity = false;
 
+    //For Each is used for getting data from an array
     arr.forEach(function (login) {
 
         var logInEmail = login.email;
     var logInPass = login.password;
 
-
-
-
-        if(LoginCredential.LogEmail== logInEmail && LoginCredential.LogPassword  == logInPass)
+        if(LoginCredential.logEmail== logInEmail && LoginCredential.logPassword  == logInPass)
         {
 
             console.log("Welcome User " + login.firstname);
             validity = true;
         }
-        // else {
-        //     console.log("Error! No user found");
-        //     res.end();
-        // }
     });
  if(!validity){
      console.log("Error! No user found");
@@ -97,35 +91,30 @@ exports.logInUser = function (req, res) {
  }
 };
 
+
+
 exports.userProfile = function (req, res){
 
     var userValidity = false;
 
-
-
     arr.forEach(function (item, index, array) {
 
-        //var storedEmail = item.email;
         var inputEmail = req.params.email;
         var storedEmail = item.email;
 
+        //here filter method is used for getting an object from an array
             var result  = arr.filter(function(val){
                 return val.email == req.params.email;
             });
         if (storedEmail == inputEmail){
 
-            res.send("Welcome User " + result);
+            console.log("Welcome User" + " " +  item.firstname);
+            res.send(result);
             userValidity = true;
         }
     });
 
     if(!userValidity){
-        res.send("User not found " +
-            "Goto /user/create-user to create your account")
+        res.send("User not found ");
     }
 };
-
-// exports.logInUser = function (){
-//
-//
-// };
