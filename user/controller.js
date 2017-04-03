@@ -3,20 +3,11 @@ var cache = require('memory-cache');
 
 
 
-
 //code below will initialize an empty array in cache key and then retrieve it in var = arr
 cache.put('users', []);
 var arr = cache.get('users');
 
-exports.createUser = function(req, res, next) {
-
-    // var user = {
-    //         firstname: "",
-    //         lastname: "",
-    //         email: "",
-    //         phone: "",
-    //         password: ""
-    //     };
+exports.createUser = function(req, res) {
 
 
     // because we dont want first entry to be validate so we put this if statement
@@ -56,17 +47,8 @@ exports.createUser = function(req, res, next) {
            res.send("Email already exist");
        }
    }
-
-    //res.send(cache.get('user'));
-   // next();
 };
 
-//This handler function shows the user on windows after user created
-// exports.showUser = function (req, res) {
-//
-// res.send(cache.get('user'));
-//
-// };
 
 
 exports.logInUser = function (req, res) {
@@ -103,6 +85,5 @@ exports.userProfile = function (req, res){
                 return val.email == req.params.email;
 
             });
-            res.send(result);
-
+            return result? res.send(result) : null;
 };
