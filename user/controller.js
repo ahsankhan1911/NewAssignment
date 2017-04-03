@@ -10,7 +10,7 @@ var arr = cache.get('users');
 
 exports.createUser = function(req, res, next) {
 
-    var users = {
+    var user = {
             firstname: "",
             lastname: "",
             email: "",
@@ -25,7 +25,7 @@ exports.createUser = function(req, res, next) {
 
        arr.push(req.body);
        cache.put('user', arr);
-       console.log(cache.get('user'));
+       res.send(cache.get('user'));
        console.log('User' + " " + arr.length + " " + 'created');
    }
    else {
@@ -39,36 +39,35 @@ exports.createUser = function(req, res, next) {
            var newEmail = req.body.email;
 
            if (storedEmail == newEmail) {
-               console.log("Email already exist");
                validateUser = true;
            }
        });
 
+
        if(!validateUser) {
-               arr.push(req.body);1
-               console.log(cache.get('user'));
+               arr.push(req.body);
+               res.send(cache.get('user'));
                console.log('User' + " " + arr.length + " " + 'created');
        }
-
+       else {
+           res.send("Email already exist");
+       }
    }
 
-    next();
+    //res.send(cache.get('user'));
+   // next();
 };
 
 //This handler function shows the user on windows after user created
-exports.showUser = function (req, res) {
-
-res.send(cache.get('user'));
-
-};
+// exports.showUser = function (req, res) {
+//
+// res.send(cache.get('user'));
+//
+// };
 
 
 exports.logInUser = function (req, res) {
 
-    var logInfo = {
-        logEmail: "",
-        logPassword: ""
-    };
     var LoginCredential = req.body;
     var validity = false;
 
@@ -78,16 +77,18 @@ exports.logInUser = function (req, res) {
         var logInEmail = login.email;
     var logInPass = login.password;
 
-        if(LoginCredential.logEmail== logInEmail && LoginCredential.logPassword  == logInPass)
+        if(LoginCredential.email == logInEmail && LoginCredential.password  == logInPass)
         {
 
-            console.log("Welcome User " + login.firstname);
+
             validity = true;
         }
     });
  if(!validity){
-     console.log("Error! No user found");
-     res.end();
+     res.send("Error! No user found");
+ }
+ else {
+     res.send("Welcome User" + LoginCredential.firstname);
  }
 };
 
@@ -95,26 +96,12 @@ exports.logInUser = function (req, res) {
 
 exports.userProfile = function (req, res){
 
-    var userValidity = false;
-
-    arr.forEach(function (item, index, array) {
-
-        var inputEmail = req.params.email;
-        var storedEmail = item.email;
 
         //here filter method is used for getting an object from an array
             var result  = arr.filter(function(val){
                 return val.email == req.params.email;
+
             });
-        if (storedEmail == inputEmail){
-
-            console.log("Welcome User" + " " +  item.firstname);
             res.send(result);
-            userValidity = true;
-        }
-    });
 
-    if(!userValidity){
-        res.send("User not found ");
-    }
 };
