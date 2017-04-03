@@ -10,13 +10,13 @@ var arr = cache.get('users');
 
 exports.createUser = function(req, res, next) {
 
-    var user = {
-            firstname: "",
-            lastname: "",
-            email: "",
-            phone: "",
-            password: ""
-        };
+    // var user = {
+    //         firstname: "",
+    //         lastname: "",
+    //         email: "",
+    //         phone: "",
+    //         password: ""
+    //     };
 
 
     // because we dont want first entry to be validate so we put this if statement
@@ -27,6 +27,8 @@ exports.createUser = function(req, res, next) {
        cache.put('user', arr);
        res.send(cache.get('user'));
        console.log('User' + " " + arr.length + " " + 'created');
+       console.log(cache.get('user'));
+
    }
    else {
 
@@ -48,6 +50,7 @@ exports.createUser = function(req, res, next) {
                arr.push(req.body);
                res.send(cache.get('user'));
                console.log('User' + " " + arr.length + " " + 'created');
+               console.log(cache.get('user'));
        }
        else {
            res.send("Email already exist");
@@ -79,8 +82,6 @@ exports.logInUser = function (req, res) {
 
         if(LoginCredential.email == logInEmail && LoginCredential.password  == logInPass)
         {
-
-
             validity = true;
         }
     });
@@ -88,7 +89,7 @@ exports.logInUser = function (req, res) {
      res.send("Error! No user found");
  }
  else {
-     res.send("Welcome User" + LoginCredential.firstname);
+     res.send("Welcome User");
  }
 };
 
